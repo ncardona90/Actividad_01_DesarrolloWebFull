@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Home from './components/Home';
 import ProductList from './components/ProductList';
 import ProductDetails from './components/ProductDetails';
-import EditProductForm from './components/EditProductForm'; // Importar el nuevo componente
+import EditProductForm from './components/EditProductForm';
 import Cart from './components/Cart';
 import Categories from './components/Categories';
 import Checkout from './components/Checkout';
@@ -19,6 +19,12 @@ import { getProducts, initializeData, addProduct } from './db';
 function PrivateRoute({ children }) {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
     return isAuthenticated ? children : <Navigate to="/login" />;
+}
+
+function AdminRoute({ children }) {
+    const isAuthenticated = localStorage.getItem('isAuthenticated');
+    const role = localStorage.getItem('role');
+    return isAuthenticated && role === 'admin' ? children : <Navigate to="/" />;
 }
 
 function App() {
@@ -62,8 +68,8 @@ function App() {
                         <Route path="/carrito" element={<PrivateRoute><Cart cartItems={cartItems} clearCart={clearCart} /></PrivateRoute>} />
                         <Route path="/categorias" element={<PrivateRoute><Categories /></PrivateRoute>} />
                         <Route path="/pago" element={<PrivateRoute><Checkout /></PrivateRoute>} />
-                        <Route path="/admin-productos" element={<PrivateRoute><AdminProductForm handleAddProduct={handleAddProduct} /></PrivateRoute>} />
-                        <Route path="/admin-productos/editar/:productId" element={<PrivateRoute><EditProductForm /></PrivateRoute>} />
+                        <Route path="/admin-productos" element={<AdminRoute><AdminProductForm handleAddProduct={handleAddProduct} /></AdminRoute>} />
+                        <Route path="/admin-productos/editar/:productId" element={<AdminRoute><EditProductForm /></AdminRoute>} />
                     </Routes>
                 </div>
                 <Footer />

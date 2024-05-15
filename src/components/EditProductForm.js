@@ -4,93 +4,80 @@ import { getProductById, updateProduct } from '../db';
 
 function EditProductForm() {
     const { productId } = useParams();
-    const [product, setProduct] = useState(null);
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [price, setPrice] = useState('');
-    const [rating, setRating] = useState('');
-    const [category, setCategory] = useState('');
-    const [image, setImage] = useState('');
     const navigate = useNavigate();
+    const [product, setProduct] = useState(null);
 
     useEffect(() => {
         const fetchProduct = async () => {
             const productData = await getProductById(productId);
             setProduct(productData);
-            setName(productData.name);
-            setDescription(productData.description);
-            setPrice(productData.price);
-            setRating(productData.rating);
-            setCategory(productData.category);
-            setImage(productData.image);
         };
         fetchProduct();
     }, [productId]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const updatedProduct = { id: product.id, name, description, price: Number(price), rating: Number(rating), category, image };
-        await updateProduct(updatedProduct);
-        navigate('/productos');
+    const handleAddImageField = () => {
+        setProduct({
+            ...product,
+            images: [...product.images, '']
+        });
     };
 
-    if (!product) return <div>Loading...</div>;
+    const handleImageChange = (index, value) => {
+        const newImages = [...product.images];
+        newImages[index] = value;
+        setProduct({
+            ...product,
+            images: newImages
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await updateProduct(product);
+        navigate('/admin-productos');
+    };
+
+    if (!product) {
+        return <div>Loading...</div>;
+    }
 
     return (
-        <div className="container mt-4">
-            <h2>Editar Producto</h2>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="name">Nombre:</label>
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                /><br /><br />
-                <label htmlFor="description">Descripción:</label>
-                <input
-                    type="text"
-                    id="description"
-                    name="description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                /><br /><br />
-                <label htmlFor="price">Precio:</label>
-                <input
-                    type="text"
-                    id="price"
-                    name="price"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                /><br /><br />
-                <label htmlFor="rating">Calificación:</label>
-                <input
-                    type="text"
-                    id="rating"
-                    name="rating"
-                    value={rating}
-                    onChange={(e) => setRating(e.target.value)}
-                /><br /><br />
-                <label htmlFor="category">Categoría:</label>
-                <input
-                    type="text"
-                    id="category"
-                    name="category"
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                /><br /><br />
-                <label htmlFor="image">URL de la imagen:</label>
-                <input
-                    type="text"
-                    id="image"
-                    name="image"
-                    value={image}
-                    onChange={(e) => setImage(e.target.value)}
-                /><br /><br />
-                <button type="submit">Guardar Cambios</button>
-            </form>
-        </div>
+        <form onSubmit={handleSubmit}>
+            <div>
+                <label>Nombre:</label>
+                <input type="text" value={product.name} onChange={(e) => setProduct({ ...product, name: e.target.value })} />
+            </div>
+            <div>
+                <label>Descripción:</label>
+                <input type="text" value={product.description} onChange={(e) => setProduct({ ...product, description: e.target.value })} />
+            </div>
+            <div>
+                <label>Precio:</label>
+                <input type="number" value={product.price} onChange={(e) => setProduct({ ...product, price: e.target.value })} />
+            </div>
+            <div>
+                <label>Calificación:</label>
+                <input type="number" value={product.rating} onChange={(e) => setProduct({ ...product, rating: e.target.value })} />
+            </div>
+            <div>
+                <label>Categoría:</label>
+                <input type="text" value={product.category} onChange={(e) => setProduct({ ...product, category: e.target.value })} />
+            </div>
+            <div>
+                <label>Imágenes:</label>
+                {product.images.map((image, index) => (
+                    <input
+                        key={index}
+                        type="text"
+                        value={image}
+                        onChange={(e) => handleImageChange(index, e.target.value)}
+                        placeholder="URL de la imagen"
+                    />
+                ))}
+                <button type="button" onClick={handleAddImageField}>Agregar otra imagen</button>
+            </div>
+            <button type="submit">Guardar Cambios</button>
+        </form>
     );
 }
 

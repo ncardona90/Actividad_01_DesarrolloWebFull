@@ -1,74 +1,68 @@
-import localforage from 'localforage';
+const API_URL = 'http://localhost:5000/api';
 
-localforage.config({
-    name: 'TiendaOnline',
-    storeName: 'data'
-});
-
+// Obtener todos los productos
 export const getProducts = async () => {
-    const products = await localforage.getItem('productos');
-    return products ? products : [];
+    const response = await fetch(`${API_URL}/products`);
+    return await response.json();
 };
 
+// Obtener un producto por ID
 export const getProductById = async (id) => {
-    const products = await getProducts();
-    return products.find(product => product.id === parseInt(id));
+    const response = await fetch(`${API_URL}/products/${id}`);
+    return await response.json();
 };
 
+// Agregar un nuevo producto
 export const addProduct = async (product) => {
-    const products = await getProducts();
-    product.id = products.length + 1;
-    products.push(product);
-    await localforage.setItem('productos', products);
-    return product;
+    const response = await fetch(`${API_URL}/products`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(product)
+    });
+    return await response.json();
 };
 
-export const updateProduct = async (updatedProduct) => {
-    const products = await getProducts();
-    const index = products.findIndex(product => product.id === updatedProduct.id);
-    if (index !== -1) {
-        products[index] = updatedProduct;
-        await localforage.setItem('productos', products);
-    }
+// Actualizar un producto existente
+export const updateProduct = async (product) => {
+    const response = await fetch(`${API_URL}/products/${product.id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(product)
+    });
+    return await response.json();
 };
 
-export const deleteProduct = async (productId) => {
-    const products = await getProducts();
-    const updatedProducts = products.filter(product => product.id !== productId);
-    await localforage.setItem('productos', updatedProducts);
+// Eliminar un producto
+export const deleteProduct = async (id) => {
+    await fetch(`${API_URL}/products/${id}`, {
+        method: 'DELETE'
+    });
 };
 
+// Obtener todos los usuarios
 export const getUsers = async () => {
-    const users = await localforage.getItem('usuarios');
-    return users ? users : [];
+    const response = await fetch(`${API_URL}/users`);
+    return await response.json();
 };
 
+// Agregar un nuevo usuario
 export const addUser = async (user) => {
-    const users = await getUsers();
-    users.push(user);
-    await localforage.setItem('usuarios', users);
-    return user;
+    const response = await fetch(`${API_URL}/users`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+    });
+    return await response.json();
 };
 
+// Inicializar datos
 export const initializeData = async () => {
-    const products = await getProducts();
-    const users = await getUsers();
-
-    if (products.length === 0) {
-        const initialProducts = [
-            { id: 1, name: 'Parlante JBL', description: 'Descripción del producto 1', price: 100, rating: 4, category: 'categoria1', image: 'ruta_imagen_1' },
-            { id: 2, name: 'Aro de Luz', description: 'Descripción del producto 2', price: 200, rating: 5, category: 'categoria2', image: 'ruta_imagen_2' },
-        ];
-        await localforage.setItem('productos', initialProducts);
-    }
-
-    if (users.length === 0) {
-        const adminUser = { username: 'admin', password: 'admin', role: 'admin' };
-        await addUser(adminUser);
-    }
-};
-
-export const clearData = async () => {
-    await localforage.removeItem('productos');
-    await localforage.removeItem('usuarios');
+    await getProducts();
+    await getUsers();
 };

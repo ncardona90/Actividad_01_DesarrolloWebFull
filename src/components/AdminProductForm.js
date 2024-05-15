@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { addProduct } from '../db';
 
 function AdminProductForm({ handleAddProduct }) {
     const [name, setName] = useState('');
@@ -6,76 +7,68 @@ function AdminProductForm({ handleAddProduct }) {
     const [price, setPrice] = useState('');
     const [rating, setRating] = useState('');
     const [category, setCategory] = useState('');
-    const [image, setImage] = useState('');
+    const [images, setImages] = useState(['']);
 
-    const handleSubmit = (e) => {
+    const handleAddImageField = () => {
+        setImages([...images, '']);
+    };
+
+    const handleImageChange = (index, value) => {
+        const newImages = [...images];
+        newImages[index] = value;
+        setImages(newImages);
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const product = { name, description, price: Number(price), rating: Number(rating), category, image };
-        handleAddProduct(product);
-        // Clear the form
+        const newProduct = { name, description, price, rating, category, images };
+        await addProduct(newProduct);
+        handleAddProduct(newProduct);
         setName('');
         setDescription('');
         setPrice('');
         setRating('');
         setCategory('');
-        setImage('');
+        setImages(['']);
     };
 
     return (
-        <div>
-            <h2>Agregar Producto</h2>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="name">Nombre:</label>
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                /><br /><br />
-                <label htmlFor="description">Descripción:</label>
-                <input
-                    type="text"
-                    id="description"
-                    name="description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                /><br /><br />
-                <label htmlFor="price">Precio:</label>
-                <input
-                    type="text"
-                    id="price"
-                    name="price"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                /><br /><br />
-                <label htmlFor="rating">Calificación:</label>
-                <input
-                    type="text"
-                    id="rating"
-                    name="rating"
-                    value={rating}
-                    onChange={(e) => setRating(e.target.value)}
-                /><br /><br />
-                <label htmlFor="category">Categoría:</label>
-                <input
-                    type="text"
-                    id="category"
-                    name="category"
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                /><br /><br />
-                <label htmlFor="image">URL de la imagen:</label>
-                <input
-                    type="text"
-                    id="image"
-                    name="image"
-                    value={image}
-                    onChange={(e) => setImage(e.target.value)}
-                /><br /><br />
-                <button type="submit">Agregar Producto</button>
-            </form>
-        </div>
+        <form onSubmit={handleSubmit}>
+            <div>
+                <label>Nombre:</label>
+                <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+            </div>
+            <div>
+                <label>Descripción:</label>
+                <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
+            </div>
+            <div>
+                <label>Precio:</label>
+                <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
+            </div>
+            <div>
+                <label>Calificación:</label>
+                <input type="number" value={rating} onChange={(e) => setRating(e.target.value)} />
+            </div>
+            <div>
+                <label>Categoría:</label>
+                <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} />
+            </div>
+            <div>
+                <label>Imágenes:</label>
+                {images.map((image, index) => (
+                    <input
+                        key={index}
+                        type="text"
+                        value={image}
+                        onChange={(e) => handleImageChange(index, e.target.value)}
+                        placeholder="URL de la imagen"
+                    />
+                ))}
+                <button type="button" onClick={handleAddImageField}>Agregar otra imagen</button>
+            </div>
+            <button type="submit">Agregar Producto</button>
+        </form>
     );
 }
 
