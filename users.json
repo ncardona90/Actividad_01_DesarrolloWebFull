@@ -8,5 +8,16 @@
     "username": "nico",
     "password": "nico",
     "role": "user"
+  },
+  {
+    "name": "Aire Acondicionado",
+    "description": "12.000 btu",
+    "price": "6000000",
+    "rating": "3",
+    "category": "Hogar",
+    "images": [
+      "https://th.bing.com/th/id/OIP.6Jv9KQ3Zm8myjcryVwnb7AHaFj?w=264&h=198&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+      "https://th.bing.com/th/id/OIP.Nvrh0eGuJtQ8rDJskjAW4wHaHa?w=198&h=198&c=7&r=0&o=5&dpr=1.3&pid=1.7"
+    ]
   }
 ]
