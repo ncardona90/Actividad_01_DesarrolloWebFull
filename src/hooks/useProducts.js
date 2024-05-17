@@ -1,17 +1,27 @@
 import { useState, useEffect } from 'react';
+import { getProducts } from '../db';
 
 function useProducts() {
     const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Simular fetch de productos
-        setProducts([
-            { id: 1, name: 'Producto 1', description: 'Descripción del producto 1' },
-            { id: 2, name: 'Producto 2', description: 'Descripción del producto 2' }
-        ]);
+        const fetchProducts = async () => {
+            try {
+                const productsData = await getProducts();
+                setProducts(productsData);
+                setLoading(false);
+            } catch (error) {
+                setError(error.message);
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
     }, []);
 
-    return products;
+    return { products, loading, error };
 }
 
 export default useProducts;

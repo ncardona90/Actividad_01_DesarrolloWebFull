@@ -1,75 +1,140 @@
-import React, { useState } from 'react';
-import { addProduct } from '../db';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { addProduct, getProductById, updateProduct } from '../db';
+import '../styles/AdminProductForm.css';
 
 function AdminProductForm({ handleAddProduct }) {
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [price, setPrice] = useState('');
-    const [rating, setRating] = useState('');
-    const [category, setCategory] = useState('');
-    const [images, setImages] = useState(['']);
+    const { productId } = useParams();
+    const navigate = useNavigate();
+    const [product, setProduct] = useState({
+        name: '',
+        description: '',
+        price: '',
+        rating: '',
+        category: '',
+        images: ['']
+    });
 
-    const handleAddImageField = () => {
-        setImages([...images, '']);
+    useEffect(() => {
+        if (productId) {
+            const fetchProduct = async () => {
+                const productData = await getProductById(productId);
+                setProduct(productData);
+            };
+            fetchProduct();
+        }
+    }, [productId]);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setProduct((prevProduct) => ({
+            ...prevProduct,
+            [name]: value,
+        }));
     };
 
     const handleImageChange = (index, value) => {
-        const newImages = [...images];
+        const newImages = [...product.images];
         newImages[index] = value;
-        setImages(newImages);
+        setProduct((prevProduct) => ({
+            ...prevProduct,
+            images: newImages,
+        }));
+    };
+
+    const handleAddImageField = () => {
+        setProduct((prevProduct) => ({
+            ...prevProduct,
+            images: [...prevProduct.images, ''],
+        }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const newProduct = { name, description, price, rating, category, images };
-        await addProduct(newProduct);
-        handleAddProduct(newProduct);
-        setName('');
-        setDescription('');
-        setPrice('');
-        setRating('');
-        setCategory('');
-        setImages(['']);
+        if (productId) {
+            await updateProduct(productId, product);
+        } else {
+            await addProduct(product);
+            handleAddProduct(product);
+        }
+        navigate('/productos');
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>Nombre:</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-            </div>
-            <div>
-                <label>Descripción:</label>
-                <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
-            </div>
-            <div>
-                <label>Precio:</label>
-                <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
-            </div>
-            <div>
-                <label>Calificación:</label>
-                <input type="number" value={rating} onChange={(e) => setRating(e.target.value)} />
-            </div>
-            <div>
-                <label>Categoría:</label>
-                <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} />
-            </div>
-            <div>
-                <label>Imágenes:</label>
-                {images.map((image, index) => (
+        <div className="container mt-4">
+            <form className="form" onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label>Nombre del Producto</label>
                     <input
-                        key={index}
                         type="text"
-                        value={image}
-                        onChange={(e) => handleImageChange(index, e.target.value)}
-                        placeholder="URL de la imagen"
+                        className="form-control"
+                        name="name"
+                        value={product.name}
+                        onChange={handleInputChange}
                     />
-                ))}
-                <button type="button" onClick={handleAddImageField}>Agregar otra imagen</button>
-            </div>
-            <button type="submit">Agregar Producto</button>
-        </form>
+                </div>
+                <div className="form-group">
+                    <label>Descripción</label>
+                    <textarea
+                        className="form-control"
+                        name="description"
+                        value={product.description}
+                        onChange={handleInputChange}
+                    ></textarea>
+                </div>
+                <div className="form-group">
+                    <label>Precio</label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        name="price"
+                        value={product.price}
+                        onChange={handleInputChange}
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Calificación</label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        name="rating"
+                        value={product.rating}
+                        onChange={handleInputChange}
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Categoría</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        name="category"
+                        value={product.category}
+                        onChange={handleInputChange}
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Imágenes</label>
+                    {product.images.map((image, index) => (
+                        <input
+                            key={index}
+                            type="text"
+                            className="form-control mb-2"
+                            placeholder={`URL de la imagen ${index + 1}`}
+                            value={image}
+                            onChange={(e) => handleImageChange(index, e.target.value)}
+                        />
+                    ))}
+                    <button type="button" className="btn btn-secondary" onClick={handleAddImageField}>
+                        Agregar Imagen
+                    </button>
+                </div>
+                <button type="submit" className="btn btn-primary">
+                    {productId ? 'Actualizar Producto' : 'Agregar Producto'}
+                </button>
+            </form>
+        </div>
     );
 }
 
 export default AdminProductForm;
+

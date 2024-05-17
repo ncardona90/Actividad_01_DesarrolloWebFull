@@ -7,10 +7,12 @@ function SearchBar({ searchQuery, setSearchQuery }) {
             placeholder="Buscar productos..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-bar"
+            className="form-control"
         />
     );
 }
 
 export default SearchBar;
+
+
 
