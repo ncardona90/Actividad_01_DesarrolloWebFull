@@ -19,5 +19,10 @@
       "https://th.bing.com/th/id/OIP.6Jv9KQ3Zm8myjcryVwnb7AHaFj?w=264&h=198&c=7&r=0&o=5&dpr=1.3&pid=1.7",
       "https://th.bing.com/th/id/OIP.Nvrh0eGuJtQ8rDJskjAW4wHaHa?w=198&h=198&c=7&r=0&o=5&dpr=1.3&pid=1.7"
     ]
+  },
+  {
+    "username": "nuevo",
+    "password": "nuevo",
+    "role": "user"
   }
 ]

@@ -23,6 +23,7 @@ function PrivateRoute({ children }) {
 function App() {
     const [cartItems, setCartItems] = useState([]);
     const [products, setProducts] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -31,6 +32,11 @@ function App() {
         };
         fetchProducts();
     }, []);
+
+    useEffect(() => {
+        const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        setTotalPrice(total);
+    }, [cartItems]);
 
     const addToCart = (product) => {
         const existingItem = cartItems.find(item => item.id === product.id);
@@ -80,7 +86,7 @@ function App() {
                     <Route path="/productos/:productId" element={<PrivateRoute><ProductDetails addToCart={addToCart} /></PrivateRoute>} />
                     <Route path="/carrito" element={<PrivateRoute><Cart cartItems={cartItems} updateCartItemQuantity={updateCartItemQuantity} removeFromCart={removeFromCart} clearCart={clearCart} /></PrivateRoute>} />
                     <Route path="/categorias" element={<PrivateRoute><Categories categories={categories} /></PrivateRoute>} />
-                    <Route path="/pago" element={<PrivateRoute><Checkout /></PrivateRoute>} />
+                    <Route path="/checkout" element={<PrivateRoute><Checkout cartItems={cartItems} totalPrice={totalPrice} /></PrivateRoute>} />
                     <Route path="/admin-productos" element={<PrivateRoute><AdminProductForm handleAddProduct={handleAddProduct} /></PrivateRoute>} />
                     <Route path="/admin-productos/editar/:productId" element={<PrivateRoute><AdminProductForm handleAddProduct={handleAddProduct} /></PrivateRoute>} />
                 </Routes>

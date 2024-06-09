@@ -1,12 +1,31 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Categories.css';
 
 const categoryIcons = {
     Speakers: 'fas fa-volume-up',
     Smartphones: 'fas fa-mobile-alt',
     Laptops: 'fas fa-desktop',
-    // Cada vez que necesite una categoría adicional, agregar iconos y su ref
+    Cameras: 'fas fa-camera',
+    Headphones: 'fas fa-headphones',
+    Accessories: 'fas fa-cog',
+    Gaming: 'fas fa-gamepad',
+    Drones: 'fas fa-fighter-jet',
+    Wearables: 'fas fa-clock',
+    Printers: 'fas fa-print',
+    Monitors: 'fas fa-tv',
+    Tablets: 'fas fa-tablet-alt',
+    TVs: 'fas fa-tv',
+    Home: 'fas fa-home',
+    Appliances: 'fas fa-blender',
+    Audio: 'fas fa-music',
+    Networking: 'fas fa-wifi',
+    Storage: 'fas fa-hdd',
+    Software: 'fas fa-file-code',
+    Components: 'fas fa-microchip',
+    Peripherals: 'fas fa-keyboard',
+    Services: 'fas fa-tools',
+    Other: 'fas fa-question',
 };
 
 function Categories({ categories }) {

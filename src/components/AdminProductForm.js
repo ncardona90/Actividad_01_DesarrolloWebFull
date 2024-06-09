@@ -18,10 +18,21 @@ function AdminProductForm({ handleAddProduct }) {
     useEffect(() => {
         if (productId) {
             const fetchProduct = async () => {
-                const productData = await getProductById(productId);
-                setProduct(productData);
+                try {
+                    const productData = await getProductById(productId);
+                    setProduct({
+                        name: productData.name || '',
+                        description: productData.description || '',
+                        price: productData.price || '',
+                        rating: productData.rating || '',
+                        category: productData.category || '',
+                        images: productData.images || ['']
+                    });
+                } catch (error) {
+                    console.error("Error fetching product:", error);
+                }
             };
-            fetchProduct();
+            fetchProduct().catch(error => console.error("Error in fetchProduct:", error));
         }
     }, [productId]);
 
@@ -34,11 +45,9 @@ function AdminProductForm({ handleAddProduct }) {
     };
 
     const handleImageChange = (index, value) => {
-        const newImages = [...product.images];
-        newImages[index] = value;
         setProduct((prevProduct) => ({
             ...prevProduct,
-            images: newImages,
+            images: prevProduct.images.map((img, i) => (i === index ? value : img)),
         }));
     };
 
@@ -51,13 +60,17 @@ function AdminProductForm({ handleAddProduct }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (productId) {
-            await updateProduct(productId, product);
-        } else {
-            await addProduct(product);
-            handleAddProduct(product);
+        try {
+            if (productId) {
+                await updateProduct(productId, product);
+            } else {
+                await addProduct(product);
+                handleAddProduct(product);
+            }
+            navigate('/productos');
+        } catch (error) {
+            console.error("Error saving product:", error);
         }
-        navigate('/productos');
     };
 
     return (
@@ -137,4 +150,3 @@ function AdminProductForm({ handleAddProduct }) {
 }
 
 export default AdminProductForm;
-

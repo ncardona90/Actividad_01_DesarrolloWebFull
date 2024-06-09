@@ -27,7 +27,7 @@ function Cart({ cartItems, updateCartItemQuantity, removeFromCart, clearCart }) 
                                 <h5>{item.name}</h5>
                                 <p>{formatCurrency(item.price)}</p>
                                 <div className="quantity-control">
-                                    <button className="btn btn-secondary btn-sm" onClick={() => updateCartItemQuantity(item.id, item.quantity - 1)}>-</button>
+                                    <button className="btn btn-secondary btn-sm" onClick={() => updateCartItemQuantity(item.id, Math.max(item.quantity - 1, 1))}>-</button>
                                     <span className="mx-2">{item.quantity}</span>
                                     <button className="btn btn-secondary btn-sm" onClick={() => updateCartItemQuantity(item.id, item.quantity + 1)}>+</button>
                                 </div>
