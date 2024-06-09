@@ -1,26 +1,3 @@
-.home-container {
-    padding: 20px;
-    text-align: center;
-}
-
-.banner {
-    background: url('https://th.bing.com/th/id/OIG1.AwQRwMtmKooGK4tOW9i0?pid=ImgGn') no-repeat center center;
-    background-size: cover;
-    padding: 50px 20px;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.banner h1 {
-    font-size: 2.5em;
-    margin-bottom: 20px;
-}
-
-.banner p {
-    font-size: 1.2em;
-    margin-bottom: 20px;
-}
-
 .section {
     margin: 40px 0;
 }
@@ -30,14 +7,14 @@
     margin-bottom: 20px;
 }
 
-.products, .categories, .testimonials {
+.categories, .testimonials {
     display: flex;
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
 }
 
-.product-card-home, .category-card, .testimonial-card {
+.testimonial-card {
     border: 1px solid #ddd;
     padding: 20px;
     border-radius: 5px;
@@ -45,7 +22,7 @@
     text-align: center;
 }
 
-.product-card-home img, .category-card i {
+.category-card i {
     width: 100%;
     height: auto;
     margin-bottom: 15px;
@@ -59,9 +36,54 @@
 .category-card {
     text-decoration: none;
     color: inherit;
-    cursor: pointer;
 }
 
 .testimonial-card p {
     font-style: italic;
+}
+
+.home-container {
+    padding: 20px;
+    text-align: center;
+}
+
+.banner {
+    position: relative;
+    background: url('https://th.bing.com/th/id/OIG1.AwQRwMtmKooGK4tOW9i0?pid=ImgGn') no-repeat center center;
+    background-size: cover;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Fondo negro semitransparente */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.banner h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.banner p {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+.banner .btn {
+    font-size: 1.2em;
+    padding: 10px 20px;
 }
