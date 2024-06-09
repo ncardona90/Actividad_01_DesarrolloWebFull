@@ -43,7 +43,7 @@ Para iniciar la aplicación en modo de desarrollo.
 1. Iniciar el servidor:
 
 ```sh 
-node server.js
+node server.jsx
 ```
 El servidor se ejecutará en http://localhost:5000 por defecto.
 

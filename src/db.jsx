@@ -60,9 +60,3 @@ export const addUser = async (user) => {
     });
     return await response.json();
 };
-
-// Inicializar datos
-export const initializeData = async () => {
-    await getProducts();
-    await getUsers();
-};

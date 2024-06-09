@@ -13,7 +13,7 @@ function Checkout({ cartItems, totalPrice }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Aquí puedes manejar la lógica de pago, por ejemplo, enviar la información a un servidor.
+        // Lógica de pago.
         console.log('Payment processed');
     };
 
@@ -53,12 +53,12 @@ function Checkout({ cartItems, totalPrice }) {
                 <div className="form-group payment-method">
                     <label>
                         <input type="radio" value="creditCard" checked={paymentMethod === 'creditCard'} onChange={(e) => setPaymentMethod(e.target.value)} />
-                        <img src="visa-logo.png" alt="Visa" className="payment-logo" />
-                        <img src="mastercard-logo.png" alt="MasterCard" className="payment-logo" />
+                        <img src="https://logos-world.net/wp-content/uploads/2020/04/Visa-Symbol.png" alt="Visa" className="payment-logo" />
+                        <img src="https://logolook.net/wp-content/uploads/2021/07/Mastercard-Logo.png" alt="MasterCard" className="payment-logo" />
                     </label>
                     <label>
                         <input type="radio" value="paypal" checked={paymentMethod === 'paypal'} onChange={(e) => setPaymentMethod(e.target.value)} />
-                        <img src="paypal-logo.png" alt="PayPal" className="payment-logo" />
+                        <img src="https://logolook.net/wp-content/uploads/2021/06/Paypal-Logo-2007.png" alt="PayPal" className="payment-logo" />
                     </label>
                 </div>
 
