@@ -9,11 +9,14 @@
     "password": "nico",
     "role": "user"
   },
-
   {
     "username": "nuevo",
     "password": "nuevo",
     "role": "user"
+  },
+  {
+    "username": "uno",
+    "password": "uno",
+    "role": "user"
   }
-
 ]

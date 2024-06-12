@@ -1,8 +1,12 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'font-awesome/css/font-awesome.min.css';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import App from './App';
+import { AuthProvider } from './AuthContext';
 
-const root = document.getElementById('root');
-ReactDOM.createRoot(root).render(<App />);
+const container = document.getElementById('root');
+const root = createRoot(container);
+root.render(
+    <AuthProvider>
+        <App />
+    </AuthProvider>
+);

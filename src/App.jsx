@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
@@ -12,12 +12,11 @@ import Login from './components/Login';
 import Register from './components/Register';
 import AdminProductForm from './components/AdminProductForm';
 import ProductDetails from './components/ProductDetails';
+import OrderList from './components/OrderList';
+import AdminOrderList from './components/AdminOrderList';
 import { getProducts, addUser } from './db';
-
-function PrivateRoute({ children }) {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    return isAuthenticated ? children : <Navigate to="/login" />;
-}
+import { AuthProvider } from './src/AuthContext';
+import PrivateRoute from './src/PrivateRoute';
 
 function App() {
     const [cartItems, setCartItems] = useState([]);
@@ -75,21 +74,25 @@ function App() {
     return (
         <div className="App">
             <Router>
-                <Header />
-                <Nav cartItemCount={cartItems.length} />
-                <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/" element={<PrivateRoute><Home categories={categories} products={products} /></PrivateRoute>} />
-                    <Route path="/productos" element={<PrivateRoute><ProductList products={products} addToCart={addToCart} /></PrivateRoute>} />
-                    <Route path="/productos/:productId" element={<PrivateRoute><ProductDetails addToCart={addToCart} /></PrivateRoute>} />
-                    <Route path="/carrito" element={<PrivateRoute><Cart cartItems={cartItems} updateCartItemQuantity={updateCartItemQuantity} removeFromCart={removeFromCart} clearCart={clearCart} /></PrivateRoute>} />
-                    <Route path="/categorias" element={<PrivateRoute><Categories categories={categories} /></PrivateRoute>} />
-                    <Route path="/checkout" element={<PrivateRoute><Checkout cartItems={cartItems} totalPrice={totalPrice} /></PrivateRoute>} />
-                    <Route path="/admin-productos" element={<PrivateRoute><AdminProductForm handleAddProduct={handleAddProduct} /></PrivateRoute>} />
-                    <Route path="/admin-productos/editar/:productId" element={<PrivateRoute><AdminProductForm handleAddProduct={handleAddProduct} /></PrivateRoute>} />
-                </Routes>
-                <Footer />
+                <AuthProvider>
+                    <Header />
+                    <Nav cartItemCount={cartItems.length} />
+                    <Routes>
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/" element={<PrivateRoute><Home categories={categories} products={products} /></PrivateRoute>} />
+                        <Route path="/productos" element={<PrivateRoute><ProductList products={products} addToCart={addToCart} /></PrivateRoute>} />
+                        <Route path="/productos/:productId" element={<PrivateRoute><ProductDetails addToCart={addToCart} /></PrivateRoute>} />
+                        <Route path="/carrito" element={<PrivateRoute><Cart cartItems={cartItems} updateCartItemQuantity={updateCartItemQuantity} removeFromCart={removeFromCart} clearCart={clearCart} /></PrivateRoute>} />
+                        <Route path="/categorias" element={<PrivateRoute><Categories categories={categories} /></PrivateRoute>} />
+                        <Route path="/checkout" element={<PrivateRoute><Checkout cartItems={cartItems} totalPrice={totalPrice} /></PrivateRoute>} />
+                        <Route path="/mis-pedidos" element={<PrivateRoute><OrderList /></PrivateRoute>} />
+                        <Route path="/admin-pedidos" element={<PrivateRoute><AdminOrderList /></PrivateRoute>} />
+                        <Route path="/admin-productos" element={<PrivateRoute><AdminProductForm handleAddProduct={handleAddProduct} /></PrivateRoute>} />
+                        <Route path="/admin-productos/editar/:productId" element={<PrivateRoute><AdminProductForm handleAddProduct={handleAddProduct} /></PrivateRoute>} />
+                    </Routes>
+                    <Footer />
+                </AuthProvider>
             </Router>
         </div>
     );

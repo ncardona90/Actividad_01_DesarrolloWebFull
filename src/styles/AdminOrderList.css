@@ -1,0 +1,10 @@
+/* src/styles/AdminOrderList.css */
+.admin-order-list {
+    margin: 20px;
+}
+
+.order-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+}

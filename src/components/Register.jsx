@@ -1,37 +1,48 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { addUser } from '../db';
-import '../styles/Login.css'; // Usa el mismo archivo CSS para estilos consistentes
+import { registerUser } from '../db';
+import '../styles/Login.css';
 
 function Register() {
-    const [username, setUsername] = useState('');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const user = { username, password, role: 'user' };
         try {
-            await addUser(user);
+            await registerUser({ name, email, password });
             navigate('/login');
-        } catch (error) {
-            setError('Error al registrar el usuario');
+        } catch (err) {
+            alert('Error al registrar el usuario');
         }
     };
 
     return (
-        <div className="login-container">
-            <form onSubmit={handleSubmit} className="login-form">
-                <h2 className="text-center">Registro</h2>
+        <div className="register-container">
+            <form onSubmit={handleSubmit} className="register-form">
+                <h2 className="text-center">Registrar</h2>
                 <div className="mb-3">
-                    <label htmlFor="username" className="form-label">Usuario:</label>
+                    <label htmlFor="name" className="form-label">Nombre:</label>
                     <input
                         type="text"
-                        id="username"
+                        id="name"
                         className="form-control"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="email" className="form-label">Correo Electrónico:</label>
+                    <input
+                        type="email"
+                        id="email"
+                        className="form-control"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
                     />
                 </div>
                 <div className="mb-3">
@@ -42,10 +53,10 @@ function Register() {
                         className="form-control"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        required
                     />
                 </div>
                 <button type="submit" className="btn btn-primary w-100">Registrar</button>
-                {error && <p className="error-message">{error}</p>}
             </form>
         </div>
     );

@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import { deleteProduct } from '../db';
+import { deleteProduct, getProducts } from '../db';
 import Filters from './Filters';
 import SearchBar from './SearchBar';
-import useProducts from '../hooks/useProducts';
 import '../styles/ProductList.css';
 
 const formatCurrency = (amount) => {
@@ -21,7 +20,9 @@ function ProductList({ addToCart }) {
     const isAdmin = localStorage.getItem('role') === 'admin';
     const navigate = useNavigate();
     const location = useLocation();
-    const { products, loading, error } = useProducts();
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [filters, setFilters] = useState({
         category: '',
         rating: '',
@@ -36,6 +37,19 @@ function ProductList({ addToCart }) {
             ...prevFilters,
             category
         }));
+
+        const fetchData = async () => {
+            try {
+                const data = await getProducts();
+                setProducts(data);
+                setLoading(false);
+            } catch (error) {
+                setError(error.message);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
     }, [location]);
 
     const handleDelete = async (productId) => {
@@ -43,10 +57,8 @@ function ProductList({ addToCart }) {
         window.location.reload();
     };
 
-
     const categories = [...new Set(products.map(product => product.category))];
     const ratings = [...new Set(products.map(product => Math.floor(product.rating)))];
-
 
     const filteredProducts = products
         .filter(product => (
@@ -86,42 +98,46 @@ function ProductList({ addToCart }) {
                 </div>
             </div>
             <div className="row product-gallery">
-                {filteredProducts.map(product => (
-                    <div className="col-md-3 col-sm-6 mb-4" key={product.id}>
-                        <div className="card product-card">
-                            {product.images && product.images.length > 0 ? (
-                                <Carousel showThumbs={false} autoPlay infiniteLoop>
-                                    {product.images.map((image, index) => (
-                                        <div key={index}>
-                                            <img src={image} alt={`${product.name} ${index + 1}`} className="card-img-top" />
-                                        </div>
-                                    ))}
-                                </Carousel>
-                            ) : (
-                                <p>No hay imágenes disponibles para este producto.</p>
-                            )}
-                            <div className="card-body">
-                                <h5 className="card-title">
-                                    <Link to={`/productos/${product.id}`}>{product.name}</Link>
-                                </h5>
-                                <p className="card-text">{formatCurrency(product.price)}</p>
-                                <button className="btn btn-primary btn-block" onClick={() => addToCart(product)}>
-                                    Añadir al carrito
-                                </button>
-                                {isAdmin && (
-                                    <div className="admin-buttons mt-2">
-                                        <button className="btn btn-secondary me-2" onClick={() => navigate(`/admin-productos/editar/${product.id}`)}>
-                                            Editar
-                                        </button>
-                                        <button className="btn btn-danger" onClick={() => handleDelete(product.id)}>
-                                            Eliminar
-                                        </button>
-                                    </div>
+                {filteredProducts.map(product => {
+                    const images = product.images.split(';');
+
+                    return (
+                        <div className="col-md-3 col-sm-6 mb-4" key={product.product_id}>
+                            <div className="card product-card">
+                                {images && images.length > 0 ? (
+                                    <Carousel showThumbs={false} autoPlay infiniteLoop>
+                                        {images.map((image, index) => (
+                                            <div key={index}>
+                                                <img src={image} alt={`${product.name} ${index + 1}`} className="card-img-top" />
+                                            </div>
+                                        ))}
+                                    </Carousel>
+                                ) : (
+                                    <p>No hay imágenes disponibles para este producto.</p>
                                 )}
+                                <div className="card-body">
+                                    <h5 className="card-title">
+                                        <Link to={`/productos/${product.product_id}`}>{product.name}</Link>
+                                    </h5>
+                                    <p className="card-text">{formatCurrency(product.price)}</p>
+                                    <button className="btn btn-primary btn-block" onClick={() => addToCart(product)}>
+                                        Añadir al carrito
+                                    </button>
+                                    {isAdmin && (
+                                        <div className="admin-buttons mt-2">
+                                            <button className="btn btn-secondary me-2" onClick={() => navigate(`/admin-productos/editar/${product.product_id}`)}>
+                                                Editar
+                                            </button>
+                                            <button className="btn btn-danger" onClick={() => handleDelete(product.product_id)}>
+                                                Eliminar
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </div>
     );

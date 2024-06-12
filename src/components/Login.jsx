@@ -1,59 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getUsers } from '../db';
-import '../styles/Login.css';
+import { UserContext } from '../contexts/UserContext';
+import { loginUser } from '../db';
 
-function Login() {
-    const [username, setUsername] = useState('');
+const Login = () => {
+    const { setUser } = useContext(UserContext);
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const users = await getUsers();
-        const user = users.find(u => u.username === username && u.password === password);
-        if (user) {
-            localStorage.setItem('isAuthenticated', 'true');
+        try {
+            const user = await loginUser(email, password);
+            setUser(user);
+            localStorage.setItem('user', JSON.stringify(user));
             localStorage.setItem('role', user.role);
             navigate('/');
-        } else {
-            alert('Usuario o contraseña incorrectos');
+        } catch (err) {
+            setError('Credenciales incorrectas');
         }
     };
 
-    const handleRegister = () => {
-        navigate('/register');
-    };
-
     return (
-        <div className="login-container">
-            <form onSubmit={handleSubmit} className="login-form">
-                <h2 className="text-center">Iniciar sesión</h2>
-                <div className="mb-3">
-                    <label htmlFor="username" className="form-label">Nombre de usuario:</label>
-                    <input
-                        type="text"
-                        id="username"
-                        className="form-control"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
+        <div>
+            <h2>Iniciar sesión</h2>
+            {error && <p>{error}</p>}
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label>Email:</label>
+                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                 </div>
-                <div className="mb-3">
-                    <label htmlFor="password" className="form-label">Contraseña:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        className="form-control"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
+                <div>
+                    <label>Password:</label>
+                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 </div>
-                <button type="submit" className="btn btn-primary w-100">Iniciar sesión</button>
-                <button type="button" className="btn btn-secondary w-100 mt-3" onClick={handleRegister}>Registrar</button>
+                <button type="submit">Iniciar sesión</button>
             </form>
         </div>
     );
-}
+};
 
 export default Login;
