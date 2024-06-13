@@ -12,6 +12,9 @@ import Login from './components/Login';
 import Register from './components/Register';
 import AdminProductForm from './components/AdminProductForm';
 import ProductDetails from './components/ProductDetails';
+import OrderDetails from './components/OrderDetails'; // Importar el componente de detalles de la orden
+import UserOrders from './components/UserOrders'; // Importar el componente de órdenes del usuario
+import AdminOrders from './components/AdminOrders'; // Importar el componente de órdenes del administrador
 import { getProducts, addUser } from './db';
 
 function PrivateRoute({ children }) {
@@ -85,9 +88,12 @@ function App() {
                     <Route path="/productos/:productId" element={<PrivateRoute><ProductDetails addToCart={addToCart} /></PrivateRoute>} />
                     <Route path="/carrito" element={<PrivateRoute><Cart cartItems={cartItems} updateCartItemQuantity={updateCartItemQuantity} removeFromCart={removeFromCart} clearCart={clearCart} /></PrivateRoute>} />
                     <Route path="/categorias" element={<PrivateRoute><Categories categories={categories} /></PrivateRoute>} />
-                    <Route path="/checkout" element={<PrivateRoute><Checkout cartItems={cartItems} totalPrice={totalPrice} /></PrivateRoute>} />
+                    <Route path="/checkout" element={<PrivateRoute><Checkout cartItems={cartItems} totalPrice={totalPrice} clearCart={clearCart} /></PrivateRoute>} />
                     <Route path="/admin-productos" element={<PrivateRoute><AdminProductForm handleAddProduct={handleAddProduct} /></PrivateRoute>} />
                     <Route path="/admin-productos/editar/:productId" element={<PrivateRoute><AdminProductForm handleAddProduct={handleAddProduct} /></PrivateRoute>} />
+                    <Route path="/order-details/:orderId" element={<PrivateRoute><OrderDetails /></PrivateRoute>} /> {/* Ruta de detalles de la orden */}
+                    <Route path="/mis-ordenes" element={<PrivateRoute><UserOrders /></PrivateRoute>} /> {/* Ruta de órdenes del usuario */}
+                    <Route path="/admin-ordenes" element={<PrivateRoute><AdminOrders /></PrivateRoute>} /> {/* Ruta de órdenes del administrador */}
                 </Routes>
                 <Footer />
             </Router>
