@@ -32,8 +32,18 @@ function Nav({ cartItemCount }) {
                             <Link className="nav-link" to="/categorias">Categorías</Link>
                         </li>
                         {isAuthenticated && role === 'admin' && (
+                            <>
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/admin-productos">Admin Productos</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/admin-ordenes">Ver Todas las Órdenes</Link>
+                                </li>
+                            </>
+                        )}
+                        {isAuthenticated && role === 'user' && (
                             <li className="nav-item">
-                                <Link className="nav-link" to="/admin-productos">Admin Productos</Link>
+                                <Link className="nav-link" to="/mis-ordenes">Mis Órdenes</Link>
                             </li>
                         )}
                     </ul>

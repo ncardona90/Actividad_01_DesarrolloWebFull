@@ -1,0 +1,27 @@
+[
+  {
+    "id": "2b7e1a44-5087-4db8-991d-d66ea5bdd7a4",
+    "name": "uno",
+    "address": "dos",
+    "email": "tres@cuatro.com",
+    "phone": "654654654",
+    "username": null,
+    "cartItems": [
+      {
+        "id": 1,
+        "name": "Parlante Bluetooth Tronsmart Bang Se Ipx6 Led Ultra Portatil Color Negro",
+        "description": "Tronsmart BANG SE ofrece un sonido natural, con una gran claridad y precisión, que se dispersa de manera uniforme. Una bocina que asegura potencia y calidad por igual en la reproducción de contenidos multimedia.  Olvídate del amplificador Al ser activa solo necesitarás conectarla a la fuente de sonido y el mismo equipo se encargará de amplificar y reproducir: ganarás practicidad y espacio, ya que además requiere menos cableado que una pasiva. Es la solución más conveniente si quieres producir música en tu casa o en un estudio, y también para DJs.  Apta para aire libre Úsala en donde quieras, esta diseñada para que tengas el mejor sonido siempre, tanto en interiores como en exteriores.  Aviso legal • La duración de la batería depende del uso que se le de al producto.",
+        "price": "301218",
+        "rating": "5",
+        "category": "Speakers",
+        "images": [
+          "https://http2.mlstatic.com/D_NQ_NP_2X_846242-MLU70338420466_072023-F.webp",
+          "https://http2.mlstatic.com/D_NQ_NP_2X_923545-MLU70338420470_072023-F.webp",
+          "https://http2.mlstatic.com/D_NQ_NP_2X_790343-MLU70338320926_072023-F.webp"
+        ],
+        "quantity": 1
+      }
+    ],
+    "totalPrice": 301218
+  }
+]

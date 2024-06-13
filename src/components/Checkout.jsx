@@ -1,20 +1,37 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Checkout.css';
+import { addOrder } from '../db'; // Importar la función addOrder
 
-function Checkout({ cartItems, totalPrice }) {
+function Checkout({ cartItems, totalPrice, clearCart }) {
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
-    const [paymentMethod, setPaymentMethod] = useState('creditCard');
-    const [cardNumber, setCardNumber] = useState('');
-    const [expiryDate, setExpiryDate] = useState('');
-    const [cvv, setCvv] = useState('');
+    const username = localStorage.getItem('username'); // Obtener el username del localStorage
+    const navigate = useNavigate(); // Hook para redirección
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Lógica de pago.
-        console.log('Payment processed');
+
+        const orderData = {
+            name,
+            address,
+            email,
+            phone,
+            username, // Incluir el username en la orden
+            cartItems,
+            totalPrice,
+        };
+
+        try {
+            const response = await addOrder(orderData);
+            console.log('Order saved successfully', response);
+            clearCart(); // Vaciar el carrito
+            navigate(`/order-details/${response.id}`); // Redirigir a la página de detalles de la orden
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
     return (
@@ -49,37 +66,7 @@ function Checkout({ cartItems, totalPrice }) {
                 </ul>
                 <h4>Total: {formatCurrency(totalPrice)}</h4>
 
-                <h3>Método de Pago</h3>
-                <div className="form-group payment-method">
-                    <label>
-                        <input type="radio" value="creditCard" checked={paymentMethod === 'creditCard'} onChange={(e) => setPaymentMethod(e.target.value)} />
-                        <img src="https://logos-world.net/wp-content/uploads/2020/04/Visa-Symbol.png" alt="Visa" className="payment-logo" />
-                        <img src="https://logolook.net/wp-content/uploads/2021/07/Mastercard-Logo.png" alt="MasterCard" className="payment-logo" />
-                    </label>
-                    <label>
-                        <input type="radio" value="paypal" checked={paymentMethod === 'paypal'} onChange={(e) => setPaymentMethod(e.target.value)} />
-                        <img src="https://logolook.net/wp-content/uploads/2021/06/Paypal-Logo-2007.png" alt="PayPal" className="payment-logo" />
-                    </label>
-                </div>
-
-                {paymentMethod === 'creditCard' && (
-                    <div className="credit-card-info">
-                        <div className="form-group">
-                            <label htmlFor="cardNumber">Número de Tarjeta:</label>
-                            <input type="text" id="cardNumber" value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} required />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="expiryDate">Fecha de Expiración:</label>
-                            <input type="text" id="expiryDate" value={expiryDate} onChange={(e) => setExpiryDate(e.target.value)} required />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="cvv">CVV:</label>
-                            <input type="text" id="cvv" value={cvv} onChange={(e) => setCvv(e.target.value)} required />
-                        </div>
-                    </div>
-                )}
-
-                <button type="submit" className="btn btn-primary">Confirmar y Pagar</button>
+                <button type="submit" className="btn btn-primary">Realizar Pedido</button>
             </form>
         </div>
     );

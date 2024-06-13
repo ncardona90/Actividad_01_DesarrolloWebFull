@@ -60,3 +60,40 @@ export const addUser = async (user) => {
     });
     return await response.json();
 };
+
+// Obtener todas las órdenes
+export const getOrders = async () => {
+    const response = await fetch(`${API_URL}/orders`);
+    return await response.json();
+};
+
+// Obtener órdenes por usuario
+export const getOrdersByUser = async (username) => {
+    const response = await fetch(`${API_URL}/orders/${username}`);
+    return await response.json();
+};
+
+// Obtener una orden por ID
+export const getOrderById = async (id) => {
+    const response = await fetch(`${API_URL}/orders/${id}`);
+    return await response.json();
+};
+
+// Agregar una nueva orden
+export const addOrder = async (order) => {
+    const response = await fetch(`${API_URL}/orders`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(order)
+    });
+    return await response.json();
+};
+
+// Eliminar una orden
+export const deleteOrder = async (id) => {
+    await fetch(`${API_URL}/orders/${id}`, {
+        method: 'DELETE'
+    });
+};
